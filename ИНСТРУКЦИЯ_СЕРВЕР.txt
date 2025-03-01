@@ -1,0 +1,91 @@
+ИНСТРУКЦИЯ ПО РАЗМЕЩЕНИЮ БОТА НА СЕРВЕРЕ
+
+Для того чтобы бот работал постоянно и был доступен всем пользователям, необходимо разместить его на сервере. Ниже приведены инструкции по размещению бота на различных платформах.
+
+=== 1. РАЗМЕЩЕНИЕ НА PYTHONANYWHERE (РЕКОМЕНДУЕТСЯ ДЛЯ НАЧИНАЮЩИХ) ===
+
+1. Зарегистрируйтесь на сайте PythonAnywhere (https://www.pythonanywhere.com/)
+2. Перейдите в раздел "Consoles" и создайте новую Bash консоль
+3. Создайте директорию для проекта и загрузите файлы бота:
+   - Создайте директорию: mkdir mkv-to-mp4-bot
+   - Перейдите в неё: cd mkv-to-mp4-bot
+   - Загрузите все файлы через раздел "Files" в PythonAnywhere
+   - Или создайте репозиторий на GitHub и клонируйте его: git clone https://github.com/ваш-логин/mkv-to-mp4-bot.git
+4. Установите зависимости:
+   pip install -r requirements.txt
+5. Установите FFmpeg (в PythonAnywhere FFmpeg обычно уже установлен):
+   pip install ffmpeg-python
+6. Создайте файл .env с токеном бота:
+   echo "TELEGRAM_BOT_TOKEN=7261127585:AAHbO54mDWgorVxFF6Lr-SKVnfF3HTTD4lc" > .env
+7. Перейдите в раздел "Tasks" и создайте новую задачу:
+   - Выберите "Always-on task" (для платных аккаунтов)
+   - Команда: python /home/ваш_логин/mkv-to-mp4-bot/bot.py
+   - Описание: "Telegram Bot для конвертации MKV в MP4"
+8. Сохраните задачу и запустите ее
+
+=== 2. РАЗМЕЩЕНИЕ НА HEROKU ===
+
+1. Зарегистрируйтесь на сайте Heroku (https://www.heroku.com/)
+2. Установите Heroku CLI (https://devcenter.heroku.com/articles/heroku-cli)
+3. Создайте репозиторий на GitHub с вашими файлами или подготовьте локальный репозиторий Git
+4. Войдите в аккаунт Heroku через терминал:
+   heroku login
+5. Создайте новое приложение:
+   heroku create mkv-to-mp4-bot
+6. Добавьте buildpack для FFmpeg:
+   heroku buildpacks:add https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git
+   heroku buildpacks:add heroku/python
+7. Настройте переменные окружения:
+   heroku config:set TELEGRAM_BOT_TOKEN=7261127585:AAHbO54mDWgorVxFF6Lr-SKVnfF3HTTD4lc
+8. Загрузите ваш проект на Heroku:
+   git add .
+   git commit -m "Initial commit"
+   git push heroku master
+9. Запустите worker:
+   heroku ps:scale worker=1
+
+=== 3. РАЗМЕЩЕНИЕ НА VPS (DIGITALOCEAN, LINODE, VULTR И Т.Д.) ===
+
+1. Арендуйте VPS с Ubuntu (например, на DigitalOcean: https://www.digitalocean.com/)
+2. Подключитесь к серверу по SSH
+3. Установите необходимые пакеты:
+   sudo apt update
+   sudo apt install python3 python3-pip ffmpeg git
+4. Создайте директорию для проекта и загрузите файлы:
+   mkdir mkv-to-mp4-bot
+   cd mkv-to-mp4-bot
+   # Загрузите все файлы через SFTP или создайте репозиторий на GitHub и клонируйте его
+5. Установите зависимости:
+   pip3 install -r requirements.txt
+6. Создайте файл .env с токеном бота:
+   echo "TELEGRAM_BOT_TOKEN=7261127585:AAHbO54mDWgorVxFF6Lr-SKVnfF3HTTD4lc" > .env
+7. Настройте автозапуск с помощью systemd:
+   sudo nano /etc/systemd/system/telegrambot.service
+8. Добавьте следующее содержимое:
+   [Unit]
+   Description=Telegram Bot для конвертации MKV в MP4
+   After=network.target
+
+   [Service]
+   User=ваш_пользователь
+   WorkingDirectory=/путь/к/mkv-to-mp4-bot
+   ExecStart=/usr/bin/python3 /путь/к/mkv-to-mp4-bot/bot.py
+   Restart=always
+
+   [Install]
+   WantedBy=multi-user.target
+9. Включите и запустите сервис:
+   sudo systemctl enable telegrambot
+   sudo systemctl start telegrambot
+10. Проверьте статус:
+    sudo systemctl status telegrambot
+
+=== ВАЖНЫЕ ЗАМЕЧАНИЯ ===
+
+1. Токен бота (7261127585:AAHbO54mDWgorVxFF6Lr-SKVnfF3HTTD4lc) уже настроен и готов к использованию
+2. На серверах обычно есть ограничения на размер файлов и дисковое пространство
+3. Для обработки больших файлов может потребоваться VPS с большим объемом RAM
+4. Регулярно проверяйте логи бота для выявления ошибок
+5. Настройте мониторинг для отслеживания работоспособности бота
+6. Учтите, что на бесплатных тарифах могут быть ограничения по времени работы
+7. Для обработки больших файлов рекомендуется использовать VPS 

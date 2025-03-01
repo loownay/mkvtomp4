@@ -1,0 +1,33 @@
+# Временные файлы
+*.mkv
+*.mp4
+temp/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Файлы окружения
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Логи
+*.log
+
+# Файлы IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Файлы Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Файлы macOS
+.DS_Store
+.AppleDouble
+.LSOverride 
